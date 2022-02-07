@@ -7,7 +7,7 @@ class rdt_send_socket:
 
   def send(self,data,dest_ip,dest_port):
     packet = header.make_header(data)
-    packet.extend(bytearray(data))
+    packet.extend(bytearray(data, encoding='utf-8'))
     self.udp_socket.sendto(packet,(dest_ip,dest_port))
 
 class rdt_recv_socket:
@@ -20,5 +20,5 @@ class rdt_recv_socket:
     header_bytes = packet[:header.NUM_FIELDS]
     header_fields = header.decode_header(header_bytes)
     data = packet[header.NUM_FIELDS:]
-
+    data = data.decode()
     return data,header_fields
