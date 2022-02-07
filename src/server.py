@@ -1,8 +1,10 @@
 from rdt_socket import rdt_send_socket
 import os
 
+HOME_DIR = os.path.join(os.path.dirname(__file__),'../')
+
 DATA_SIZE = 128
-data_file = open('data.txt', 'r')
+data_file = open(os.path.join(HOME_DIR,'data','data.txt'), 'r')
 text = data_file.read()
 data_file.close()
 bytes_remaining = len(text)
