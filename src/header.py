@@ -1,6 +1,6 @@
 NUM_FIELDS = 2
 
-def make_header(data,mode,packet_num):
+def make_header(data,mode=0,packet_num=-1):
   '''
   Generate header for the data
   '''
