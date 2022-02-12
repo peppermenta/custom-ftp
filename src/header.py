@@ -1,6 +1,6 @@
 NUM_FIELDS = 2
 
-def make_header(data,mode=0,packet_num=-1):
+def make_header(mode=0,packet_num=1):
   '''
   Generate header for the data
   '''
@@ -8,7 +8,6 @@ def make_header(data,mode=0,packet_num=-1):
   fields = []
   fields.append(mode)
   fields.append(packet_num)
-  
   assert len(fields) == NUM_FIELDS
   header = bytearray(fields)
   return header
