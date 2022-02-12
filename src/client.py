@@ -3,13 +3,7 @@ from rdt_socket import rdt_socket
 # def recv_file():
   # pass
 
-def get_interval():
-  # return interval indices start and end inclusive, comma separated in a string
-  return
 
-def process_data(data, packet_num):
-  # delete packet_num element from packet_trackers and update data_received with data
-  return
 
 REC_PORT_NUMBER = 8083
 SER_PORT_NUMBER = 8084
@@ -47,6 +41,29 @@ while True:
 
 packet_trackers = [i for i in range(total_packets)]
 data_received = ['' for i in range(total_packets)]
+
+def get_interval():
+  # return interval indices start and end inclusive, comma separated in a string
+  interval = f""
+  for i in range(transmission_rate):
+    if not packet_trackers[i]+1==packet_trackers[i+1]:
+      interval += f"{packet_trackers[i]},{packet_trackers[i]}"
+    else:
+      interval += f",{packet_trackers[i]}"
+      while i<transmission_rate:
+        if packet_trackers[i+1]+1==packet_trackers[i+2]:
+          i += 1
+        else:
+          break
+      interval += f",{packet_trackers[i+1]}"
+
+  return interval
+
+def process_data(data, packet_num):
+  # delete packet_num element from packet_trackers and update data_received with data
+  packet_trackers.remove(packet_num)
+  data_received[packet_num] = data
+  return
 
 while len(packet_trackers) > 0:
   interval_data = get_interval()
