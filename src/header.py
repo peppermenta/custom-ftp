@@ -1,14 +1,13 @@
-NUM_FIELDS = 1
+NUM_FIELDS = 2
 
-def make_header(data):
+def make_header(data,mode,packet_num):
   '''
   Generate header for the data
   '''
 
   fields = []
-
-  temp_field = 5
-  fields.append(temp_field)
+  fields.append(mode)
+  fields.append(packet_num)
   
   assert len(fields) == NUM_FIELDS
   header = bytearray(fields)
@@ -22,5 +21,6 @@ def decode_header(header):
   
   assert len(fields) == NUM_FIELDS
   return {
-    'temp_field': fields[0]
+    'mode': fields[0],
+    'packet_num': fields[1]
   }
