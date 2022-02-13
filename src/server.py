@@ -52,8 +52,8 @@ while True:
 
       send_socket.send(data, 'localhost', REC_PORT_NUMBER, 1, packet_num)
       print(bytes_remaining)
-    if bytes_remaining == 0:
-      break
+    # if bytes_remaining == 0:
+    #   break
     # print('Data sent')
     # print(bytes_remaining)
   except:
