@@ -1,3 +1,4 @@
+from struct import pack
 from rdt_socket import rdt_socket
 
 # def recv_file():
@@ -5,8 +6,8 @@ from rdt_socket import rdt_socket
 
 
 
-REC_PORT_NUMBER = 8083
-SER_PORT_NUMBER = 8084
+REC_PORT_NUMBER = 8117
+SER_PORT_NUMBER = 8118
 data = 'dummy'
 count = 0
 recv_socket = rdt_socket('localhost', REC_PORT_NUMBER, 2.0)
@@ -42,22 +43,30 @@ while True:
 packet_trackers = [i for i in range(total_packets)]
 data_received = ['' for i in range(total_packets)]
 
-def get_interval():
-  # return interval indices start and end inclusive, comma separated in a string
-  interval = f""
-  for i in range(transmission_rate):
-    if not packet_trackers[i]+1==packet_trackers[i+1]:
-      interval += f"{packet_trackers[i]},{packet_trackers[i]}"
-    else:
-      interval += f",{packet_trackers[i]}"
-      while i<transmission_rate:
-        if packet_trackers[i+1]+1==packet_trackers[i+2]:
-          i += 1
-        else:
-          break
-      interval += f",{packet_trackers[i+1]}"
+# def get_interval():
+#   # return interval indices start and end inclusive, comma separated in a string
+#   interval = f""
+#   for i in range(transmission_rate):
+#     if not packet_trackers[i]+1==packet_trackers[i+1]:
+#       interval += f"{packet_trackers[i]},{packet_trackers[i]}"
+#     else:
+#       interval += f",{packet_trackers[i]}"
+#       while i<transmission_rate:
+#         if packet_trackers[i+1]+1==packet_trackers[i+2]:
+#           i += 1
+#         else:
+#           break
+#       interval += f",{packet_trackers[i+1]}"
 
-  return interval
+#   return interval
+
+def get_interval():
+  temp =  [str(element) for element in packet_trackers]
+  if len(packet_trackers) < 5:
+    return ",".join(temp)
+  return ",".join(temp[0:5])
+
+print(get_interval())
 
 def process_data(data, packet_num):
   # delete packet_num element from packet_trackers and update data_received with data
@@ -71,10 +80,13 @@ while len(packet_trackers) > 0:
   while True:
     try:
       data, header_fields = recv_socket.recv()
+      print(header_fields)
       if(header_fields['mode'] == 0):
         continue
       packet_number = header_fields['packet_num']
-      process_data(data,packet_number)
+      print(packet_number, len(packet_trackers))
+      process_data(data, packet_number)
+      # print(packet_number, len(packet_trackers))
     except:
       break
 
