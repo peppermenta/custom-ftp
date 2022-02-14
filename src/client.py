@@ -41,23 +41,47 @@ while True:
 
 packet_trackers = [i for i in range(total_packets)]
 data_received = ['' for i in range(total_packets)]
-
 def get_interval():
   # return interval indices start and end inclusive, comma separated in a string
-  interval = f""
-  for i in range(transmission_rate):
-    if not packet_trackers[i]+1==packet_trackers[i+1]:
-      interval += f"{packet_trackers[i]},{packet_trackers[i]}"
-    else:
-      interval += f",{packet_trackers[i]}"
-      while i<transmission_rate:
-        if packet_trackers[i+1]+1==packet_trackers[i+2]:
-          i += 1
-        else:
-          break
-      interval += f",{packet_trackers[i+1]}"
+  # interval = f""
+  # for i in range(transmission_rate):
+  #   if not packet_trackers[i]+1==packet_trackers[i+1]:
+  #     interval += f"{packet_trackers[i]},{packet_trackers[i]}"
+  #   else:
+  #     interval += f",{packet_trackers[i]}"
+  #     while i<transmission_rate:
+  #       if packet_trackers[i+1]+1==packet_trackers[i+2]:
+  #         i += 1
+  #       else:
+  #         break
+  #     interval += f",{packet_trackers[i+1]}"
 
-  return interval
+  # return interval
+  interval = []
+  continuous = False
+  packet_num = min(transmission_rate,len(packet_trackers))
+  for i in range(packet_num):
+    if not continuous and i==packet_num-1:
+      interval.extend([packet_num[i],packet_num[i]])
+    
+    elif continuous and i==packet_num-1:
+      interval.append(packet_trackers[i])
+    
+    elif continuous:
+      if not packet_trackers[i]+1 == packet_trackers[i+1]:
+        interval.append(packet_trackers[i])
+        continuous = False
+
+    else:
+      if packet_trackers[i]+1 == packet_trackers[i+1]:
+        interval.append(packet_trackers[i])
+        continuous = True
+
+      else:
+        interval.extend([packet_num[i],packet_num[i]])
+
+  interval = [str(i) for i in interval]
+  return ",".join(interval)
 
 def process_data(data, packet_num):
   # delete packet_num element from packet_trackers and update data_received with data
