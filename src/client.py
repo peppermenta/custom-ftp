@@ -15,7 +15,7 @@ REC_PORT_NUMBER = 8117
 SER_PORT_NUMBER = 8118
 data = 'dummy'
 count = 0
-recv_socket = rdt_socket('localhost', REC_PORT_NUMBER, 2.0)
+recv_socket = rdt_socket('localhost', REC_PORT_NUMBER, 0.01)
 total_packets = 0
 transmission_rate = 0
 
@@ -68,7 +68,7 @@ recv_socket.udp_socket.close()
 data_received = "".join(data_received)
 received_file.write(str.encode(data_received))
 
-print(data_received)
+print(len(data_received))
 
 
 # data_received = sum(data_received)

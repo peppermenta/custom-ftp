@@ -29,7 +29,7 @@ class rdt_socket:
     self.udp_socket.sendto(packet,(dest_ip,dest_port))
 
 
-  def recv(self,recv_bytes=1024):
+  def recv(self,recv_bytes=70000):
     try:
       packet,_ = self.udp_socket.recvfrom(recv_bytes)
       header_bytes = packet[:header.NUM_FIELDS]

@@ -1,28 +1,29 @@
 from rdt_socket import rdt_socket
 import os
 
+# import sys
+
 HOME_DIR = os.path.join(os.path.dirname(__file__),'../')
 
 REC_PORT_NUMBER = 8117
 SER_PORT_NUMBER = 8118
 
-DATA_SIZE = 128
+DATA_SIZE = 60000
 # data_file = open(os.path.join(HOME_DIR,'data','data.txt'), 'r')
 data_file = open(os.path.join(HOME_DIR,'data','CS3543_100MB'), 'rb')
 text = data_file.read()
 text = str(text)
 print(type(text))
-length = int(len(text) / 10)
+length = int(len(text) / 20)
 print(length)
-# text = text[:length]
+text = text[:length]
 
 # print(text[:1000])
-text = text[:10000]
+# text = text[:10000]
 
-# received_file = open(os.path.join(HOME_DIR,'data','CS3543_10k'), 'wb')
+# received_file = open(os.path.join(HOME_DIR,'data','CS3543_5k'), 'wb')
 # received_file.write(str.encode(text))
 # received_file.close()
-
 
 
 # print(text)
