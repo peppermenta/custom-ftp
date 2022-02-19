@@ -7,8 +7,25 @@ REC_PORT_NUMBER = 8117
 SER_PORT_NUMBER = 8118
 
 DATA_SIZE = 128
-data_file = open(os.path.join(HOME_DIR,'data','data.txt'), 'r')
+# data_file = open(os.path.join(HOME_DIR,'data','data.txt'), 'r')
+data_file = open(os.path.join(HOME_DIR,'data','CS3543_100MB'), 'rb')
 text = data_file.read()
+text = str(text)
+print(type(text))
+length = int(len(text) / 10)
+print(length)
+# text = text[:length]
+
+# print(text[:1000])
+text = text[:10000]
+
+# received_file = open(os.path.join(HOME_DIR,'data','CS3543_10k'), 'wb')
+# received_file.write(str.encode(text))
+# received_file.close()
+
+
+
+# print(text)
 data_file.close()
 bytes_remaining = len(text)
 transmission_rate = 5
@@ -28,13 +45,14 @@ if(mode == 0):
 
 while True:
   try: 
+    print("yo wassup")
     interval, header_file = send_socket.recv()
     interval = interval.split(',')
     if(interval[0] == ''):
       interval.pop(0)
-
+    
+    print(interval)
     for packet_num in interval:
-      
       packet_num = int(packet_num)
 
       if packet_num == total_packets - 1:
@@ -45,6 +63,7 @@ while True:
       send_socket.send(data, 'localhost', REC_PORT_NUMBER, 1, packet_num)
 
   except:
+    print("aight i'm out")
     break
 send_socket.send('\n', 'localhost', REC_PORT_NUMBER, 0, 0)
 send_socket.udp_socket.close()

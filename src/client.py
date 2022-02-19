@@ -6,7 +6,8 @@ import os
   # pass
 
 HOME_DIR = os.path.join(os.path.dirname(__file__),'../')
-received_file = open(os.path.join(HOME_DIR,'data','received.txt'), 'wb')
+# received_file = open(os.path.join(HOME_DIR,'data','received.txt'), 'wb')
+received_file = open(os.path.join(HOME_DIR,'data','CS3543_100MB_received'), 'wb')
 
 
 
@@ -48,6 +49,7 @@ def process_data(data, packet_num):
   return
 
 while len(packet_trackers) > 0:
+  print("Nm, u?")
   interval_data = get_interval()
   recv_socket.send(interval_data, 'localhost', SER_PORT_NUMBER, 1)
   while True:
@@ -62,8 +64,17 @@ while len(packet_trackers) > 0:
 
 recv_socket.udp_socket.close()
 
+
 data_received = "".join(data_received)
+received_file.write(str.encode(data_received))
+
+print(data_received)
+
+
+# data_received = sum(data_received)
+# received_file.write(data_received)
+
 
 # save the received data to a file
-received_file.write(str.encode(data_received))
+# received_file.write(str.encode(data_received))
 received_file.close()

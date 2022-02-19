@@ -25,6 +25,7 @@ class rdt_socket:
   def send(self,data,dest_ip,dest_port,mode,packet_num=1):
     packet = header.make_header(mode,packet_num)
     packet.extend(bytearray(data, encoding='utf-8'))
+    # packet.extend(data)
     self.udp_socket.sendto(packet,(dest_ip,dest_port))
 
 
