@@ -6,20 +6,19 @@ import os
   # pass
 
 HOME_DIR = os.path.join(os.path.dirname(__file__),'../')
-received_file = open(os.path.join(HOME_DIR,'data','received.txt'), 'wb')
+received_file = open(os.path.join(HOME_DIR,'data','received'), 'wb')
 
 
-
-REC_PORT_NUMBER = 8117
-SER_PORT_NUMBER = 8118
+REC_PORT_NUMBER = 8120
+SER_PORT_NUMBER = 8121
 data = 'dummy'
 count = 0
-recv_socket = rdt_socket('localhost', REC_PORT_NUMBER, 2.0)
+recv_socket = rdt_socket('10.0.0.254', REC_PORT_NUMBER, 0.01)
 total_packets = 0
 transmission_rate = 0
 
 while True:
-  recv_socket.send('\n', 'localhost', SER_PORT_NUMBER, 0)
+  recv_socket.send('\n', '10.0.0.253', SER_PORT_NUMBER, 0)
   try:
     # confirmation from sender should have data: <total bytes,transmission rate>
     data, header_fields = recv_socket.recv()
@@ -44,12 +43,13 @@ def get_interval():
 def process_data(data, packet_num):
   # delete packet_num element from packet_trackers and update data_received with data
   packet_trackers.remove(packet_num)
-  data_received[packet_num] = data
+  data_received[packet_num] = bytearray(data.encode())
   return
 
 while len(packet_trackers) > 0:
   interval_data = get_interval()
-  recv_socket.send(interval_data, 'localhost', SER_PORT_NUMBER, 1)
+  print(interval_data)
+  recv_socket.send(interval_data, '10.0.0.253', SER_PORT_NUMBER, 1)
   while True:
     try:
       data, header_fields = recv_socket.recv()
@@ -62,8 +62,10 @@ while len(packet_trackers) > 0:
 
 recv_socket.udp_socket.close()
 
-data_received = "".join(data_received)
+final_data = data_received[0]
+for d in data_received[1:]:
+  final_data.extend(d)
 
 # save the received data to a file
-received_file.write(str.encode(data_received))
+received_file.write(final_data)
 received_file.close()

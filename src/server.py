@@ -7,8 +7,9 @@ REC_PORT_NUMBER = 8117
 SER_PORT_NUMBER = 8118
 
 DATA_SIZE = 128
-data_file = open(os.path.join(HOME_DIR,'data','data.txt'), 'r')
+data_file = open(os.path.join(HOME_DIR,'data','CS3543_10MB'), 'rb')
 text = data_file.read()
+text = str(text)
 data_file.close()
 bytes_remaining = len(text)
 transmission_rate = 5
