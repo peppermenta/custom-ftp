@@ -6,7 +6,7 @@ import os
   # pass
 
 HOME_DIR = os.path.join(os.path.dirname(__file__),'../')
-received_file = open(os.path.join(HOME_DIR,'data','received.txt'), 'wb')
+received_file = open(os.path.join(HOME_DIR,'data','received'), 'wb')
 
 
 
