@@ -11,8 +11,8 @@ received_file = open(os.path.join(HOME_DIR,'data','CS3543_100MB_received'), 'wb'
 
 
 
-REC_PORT_NUMBER = 8117
-SER_PORT_NUMBER = 8118
+REC_PORT_NUMBER = 8119
+SER_PORT_NUMBER = 8120
 data = 'dummy'
 count = 0
 recv_socket = rdt_socket('localhost', REC_PORT_NUMBER, 0.01)
@@ -27,6 +27,8 @@ while True:
     args = data.split(',')
     total_packets = int(args[0])
     transmission_rate = int(args[1])
+    
+    print("header stuff", total_packets, transmission_rate)
   except:
     continue
   break
@@ -49,8 +51,8 @@ def process_data(data, packet_num):
   return
 
 while len(packet_trackers) > 0:
-  print("Nm, u?")
   interval_data = get_interval()
+  print(interval_data)
   recv_socket.send(interval_data, 'localhost', SER_PORT_NUMBER, 1)
   while True:
     try:

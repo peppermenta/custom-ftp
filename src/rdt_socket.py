@@ -32,10 +32,20 @@ class rdt_socket:
   def recv(self,recv_bytes=70000):
     try:
       packet,_ = self.udp_socket.recvfrom(recv_bytes)
-      header_bytes = packet[:header.NUM_FIELDS]
-      header_fields = header.decode_header(header_bytes)
-      data = packet[header.NUM_FIELDS:]
-      data = data.decode()
-      return data,header_fields
+      packet = packet.decode()
+
+      semicolon_index = packet.find(";")
+
+      header_section = packet[:semicolon_index]
+      header_fields = header.decode_header(header_section)
+      data = packet[semicolon_index + 1:]
+      # data = data.decode()
+      return data, header_fields
+
+      # header_bytes = packet[:header.NUM_FIELDS]
+      # header_fields = header.decode_header(header_bytes)
+      # data = packet[header.NUM_FIELDS:]
+      # data = data.decode()
+      # return data,header_fields
     except socket.timeout:
       raise TimeoutError

@@ -5,10 +5,10 @@ import os
 
 HOME_DIR = os.path.join(os.path.dirname(__file__),'../')
 
-REC_PORT_NUMBER = 8117
-SER_PORT_NUMBER = 8118
+REC_PORT_NUMBER = 8119
+SER_PORT_NUMBER = 8120
 
-DATA_SIZE = 60000
+DATA_SIZE = 10000
 # data_file = open(os.path.join(HOME_DIR,'data','data.txt'), 'r')
 data_file = open(os.path.join(HOME_DIR,'data','CS3543_100MB'), 'rb')
 text = data_file.read()
@@ -29,12 +29,12 @@ text = text[:length]
 # print(text)
 data_file.close()
 bytes_remaining = len(text)
-transmission_rate = 5
+transmission_rate = 50
 total_packets = int(bytes_remaining/DATA_SIZE) + 1
 
 last_packet_size = bytes_remaining - (total_packets - 1) * DATA_SIZE
 
-send_socket = rdt_socket('localhost', SER_PORT_NUMBER, 5.0)
+send_socket = rdt_socket('localhost', SER_PORT_NUMBER, 0.1)
 _,header_fields = send_socket.recv()
 mode = header_fields["mode"]
 
@@ -46,13 +46,15 @@ if(mode == 0):
 
 while True:
   try: 
-    print("yo wassup")
+    
     interval, header_file = send_socket.recv()
     interval = interval.split(',')
+    
+    print(interval)
+    
     if(interval[0] == ''):
       interval.pop(0)
     
-    print(interval)
     for packet_num in interval:
       packet_num = int(packet_num)
 
@@ -63,8 +65,8 @@ while True:
 
       send_socket.send(data, 'localhost', REC_PORT_NUMBER, 1, packet_num)
 
+  # except TimeoutError:
   except:
-    print("aight i'm out")
     break
 send_socket.send('\n', 'localhost', REC_PORT_NUMBER, 0, 0)
 send_socket.udp_socket.close()
