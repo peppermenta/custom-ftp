@@ -16,3 +16,4 @@ user@client_ip:~/custom-ftp$ python3 src/client.py
 ```console
 user@server_ip:~/custom-ftp$ python3 src/server.py
 ```
+- The variables `DATA_SIZE` and `transmission_rate` in `src/server.py`, and the socket timeout in `src/client.py` can be tuned to suit different use cases and network conditions
