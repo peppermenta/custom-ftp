@@ -1,26 +1,26 @@
 from struct import pack
 from rdt_socket import rdt_socket
 import os
+import time
 
 # def recv_file():
   # pass
 
 HOME_DIR = os.path.join(os.path.dirname(__file__),'../')
 # received_file = open(os.path.join(HOME_DIR,'data','received.txt'), 'wb')
-received_file = open(os.path.join(HOME_DIR,'data','CS3543_100MB_received'), 'wb')
-
+received_file = open(os.path.join(HOME_DIR,'data','received_binary_custom'), 'wb')
 
 
 REC_PORT_NUMBER = 8119
 SER_PORT_NUMBER = 8120
 data = 'dummy'
 count = 0
-recv_socket = rdt_socket('localhost', REC_PORT_NUMBER, 0.01)
+recv_socket = rdt_socket('10.0.0.254', REC_PORT_NUMBER, 0.3)
 total_packets = 0
 transmission_rate = 0
 
 while True:
-  recv_socket.send('\n', 'localhost', SER_PORT_NUMBER, 0)
+  recv_socket.send('\n', '10.0.0.253', SER_PORT_NUMBER, 0)
   try:
     # confirmation from sender should have data: <total bytes,transmission rate>
     data, header_fields = recv_socket.recv()
@@ -28,7 +28,7 @@ while True:
     total_packets = int(args[0])
     transmission_rate = int(args[1])
     
-    print("header stuff", total_packets, transmission_rate)
+    #print("header stuff", total_packets, transmission_rate)
   except:
     continue
   break
@@ -46,14 +46,17 @@ def get_interval():
 
 def process_data(data, packet_num):
   # delete packet_num element from packet_trackers and update data_received with data
+  #print(f'Received {packet_num}')
   packet_trackers.remove(packet_num)
   data_received[packet_num] = data
   return
 
+start = time.time()
 while len(packet_trackers) > 0:
+  print(f'Progress: {1-(len(packet_trackers)/total_packets)}')
   interval_data = get_interval()
-  print(interval_data)
-  recv_socket.send(interval_data, 'localhost', SER_PORT_NUMBER, 1)
+  #print(interval_data)
+  recv_socket.send(interval_data, '10.0.0.253', SER_PORT_NUMBER, 1)
   while True:
     try:
       data, header_fields = recv_socket.recv()
@@ -62,8 +65,10 @@ while len(packet_trackers) > 0:
       packet_number = header_fields['packet_num']
       process_data(data, packet_number)
     except:
+      #print('Timeout')
       break
-
+end = time.time()
+print('Time taken:',end-start)
 recv_socket.udp_socket.close()
 
 
