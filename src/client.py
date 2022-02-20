@@ -10,12 +10,16 @@ REC_PORT_NUMBER = 8119
 SER_PORT_NUMBER = 8120
 data = 'dummy'
 count = 0
-recv_socket = rdt_socket('10.0.0.254', REC_PORT_NUMBER, 0.3)
+
+CLIENT_IP = '10.0.0.254'
+SERVER_IP = '10.0.0.253'
+
+recv_socket = rdt_socket(CLIENT_IP, REC_PORT_NUMBER, 0.3)
 total_packets = 0
 transmission_rate = 0
 
 while True:
-  recv_socket.send('\n', '10.0.0.253', SER_PORT_NUMBER, 0)
+  recv_socket.send('\n', SERVER_IP, SER_PORT_NUMBER, 0)
   try:
     # confirmation from sender should have data: <total bytes,transmission rate>
     data, header_fields = recv_socket.recv()
@@ -46,7 +50,7 @@ start = time.time()
 while len(packet_trackers) > 0:
   print(f'Progress: {1-(len(packet_trackers)/total_packets)}',end='\r')
   interval_data = get_interval()
-  recv_socket.send(interval_data, '10.0.0.253', SER_PORT_NUMBER, 1)
+  recv_socket.send(interval_data, SERVER_IP, SER_PORT_NUMBER, 1)
   while True:
     try:
       data, header_fields = recv_socket.recv()
