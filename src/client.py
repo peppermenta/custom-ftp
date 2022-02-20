@@ -3,13 +3,8 @@ from rdt_socket import rdt_socket
 import os
 import time
 
-# def recv_file():
-  # pass
-
 HOME_DIR = os.path.join(os.path.dirname(__file__),'../')
-# received_file = open(os.path.join(HOME_DIR,'data','received.txt'), 'wb')
 received_file = open(os.path.join(HOME_DIR,'data','received_binary_custom'), 'wb')
-
 
 REC_PORT_NUMBER = 8119
 SER_PORT_NUMBER = 8120
@@ -27,15 +22,12 @@ while True:
     args = data.split(',')
     total_packets = int(args[0])
     transmission_rate = int(args[1])
-    
-    #print("header stuff", total_packets, transmission_rate)
   except:
     continue
   break
 
 packet_trackers = [i for i in range(total_packets)]
 data_received = ['' for i in range(total_packets)]
-
 
 def get_interval():
   temp =  [str(element) for element in packet_trackers]
@@ -46,16 +38,14 @@ def get_interval():
 
 def process_data(data, packet_num):
   # delete packet_num element from packet_trackers and update data_received with data
-  #print(f'Received {packet_num}')
   packet_trackers.remove(packet_num)
   data_received[packet_num] = data
   return
 
 start = time.time()
 while len(packet_trackers) > 0:
-  print(f'Progress: {1-(len(packet_trackers)/total_packets)}')
+  print(f'Progress: {1-(len(packet_trackers)/total_packets)}',end='\r')
   interval_data = get_interval()
-  #print(interval_data)
   recv_socket.send(interval_data, '10.0.0.253', SER_PORT_NUMBER, 1)
   while True:
     try:
@@ -65,23 +55,14 @@ while len(packet_trackers) > 0:
       packet_number = header_fields['packet_num']
       process_data(data, packet_number)
     except:
-      #print('Timeout')
+      #Timeout
       break
 end = time.time()
 print('Time taken:',end-start)
 recv_socket.udp_socket.close()
 
-
 data_received = "".join(data_received)
+
+#Writing to the output file
 received_file.write(str.encode(data_received))
-
-print(len(data_received))
-
-
-# data_received = sum(data_received)
-# received_file.write(data_received)
-
-
-# save the received data to a file
-# received_file.write(str.encode(data_received))
 received_file.close()
